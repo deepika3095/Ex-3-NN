@@ -1,7 +1,7 @@
-<H3>ENTER YOUR NAME</H3>
-<H3>ENTER YOUR REGISTER NO.</H3>
+<H3>DEEPIKA R</H3>
+<H3>212223230038</H3>
 <H3>EX. NO.3</H3>
-<H3>DATE:</H3>
+<H3>DATE:29/09/2025</H3>
 <H2 aligh = center> Implementation of MLP for a non-linearly separable data</H2>
 <h3>Aim:</h3>
 To implement a perceptron for classification using Python
@@ -36,11 +36,68 @@ Step 3: Repeat the  iteration  until the losses become constant and  minimum<BR>
 Step 4 : Test for the XOR patterns.
 
 <H3>Program:</H3>
-Insert your code here
+<pre>
+import numpy as np
+import matplotlib.pyplot as plt
+x = np.array([[0,0,1,1],
+              [0,1,0,1]])
+y = np.array([[0,1,1,0]])
 
+n_x, n_h, n_y = 2, 2, 1
+m = x.shape[1]
+lr = 0.1
+np.random.seed(2)
+
+w1 = np.random.rand(n_h,n_x)
+w2 = np.random.rand(n_y,n_h)
+losses = []
+
+def sigmoid(z):
+    return 1/(1+np.exp(-z))
+
+def forward_prop(w1,w2,x):
+    z1 = np.dot(w1,x)
+    a1 = sigmoid(z1)
+    z2 = np.dot(w2,a1)
+    a2 = sigmoid(z2)
+    return z1,a1,z2,a2
+
+def back_prop(m,w1,w2,z1,a1,z2,a2,y):
+    dz2 = a2-y
+    dw2 = np.dot(dz2,a1.T)/m
+    dz1 = np.dot(w2.T,dz2) * a1*(1-a1)
+    dw1 = np.dot(dz1,x.T)/m
+    return dw2,dw1
+iterations = 10000
+for i in range(iterations):
+    z1,a1,z2,a2 = forward_prop(w1,w2,x)
+    loss = -(1/m)*np.sum(y*np.log(a2)+(1-y)*np.log(1-a2))
+    losses.append(loss)
+    dw2,dw1 = back_prop(m,w1,w2,z1,a1,z2,a2,y)
+    w2 -= lr*dw2
+    w1 -= lr*dw1
+plt.plot(losses)
+plt.xlabel("EPOCHS")
+plt.ylabel("Loss value")
+plt.show()
+def predict(w1,w2,x_input):
+    _,_,_,a2 = forward_prop(w1,w2,x_input)
+    a2 = np.squeeze(a2)
+    predicted = 1 if a2>=0.5 else 0
+    print(f"{x_input.ravel()} -> {predicted}")
+
+print("Input -> Output")
+test=np.array([[1],[0]])
+predict(w1,w2,test)
+test=np.array([[1],[1]])
+predict(w1,w2,test)
+test=np.array([[0],[1]])
+predict(w1,w2,test)
+test=np.array([[0],[0]])
+predict(w1,w2,test)
+</pre>
 <H3>Output:</H3>
-
-Show your results here
+<img width="924" height="614" alt="image" src="https://github.com/user-attachments/assets/ca06995b-1f1e-42c3-bf1f-376b28223e48" />
 
 <H3> Result:</H3>
 Thus, XOR classification problem can be solved using MLP in Python 
